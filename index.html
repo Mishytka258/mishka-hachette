@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7f1eb">
+<title>Mishka hachette</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><div class="bear">🐻</div><div><h1>Mishka hachette</h1><p>Твоя уютная мастерская раскрасок</p></div></div>
+  <button id="backupBtn" class="soft">Резервная копия</button>
+</header>
+<nav class="tabs" aria-label="Разделы">
+  <button class="tab active" data-tab="home">Обзор</button>
+  <button class="tab" data-tab="markers">Маркеры</button>
+  <button class="tab" data-tab="books">Раскраски</button>
+  <button class="tab" data-tab="cloud">Облако</button>
+</nav>
+<main>
+<section id="home" class="panel active">
+  <div class="hero"><div><span class="eyebrow">МОЯ КОЛЛЕКЦИЯ</span><h2>Всё для творчества<br>в одном месте</h2><p>Отслеживай страницы, подбирай маркеры и сохраняй готовые работы.</p></div><div class="hero-art">🎨</div></div>
+  <div class="stats">
+    <article><strong id="statMarkers">0</strong><span>маркеров</span></article>
+    <article><strong id="statBooks">0</strong><span>раскрасок</span></article>
+    <article><strong id="statPages">0</strong><span>страниц</span></article>
+    <article><strong id="statDone">0</strong><span>готово</span></article>
+  </div>
+  <div class="section-head"><div><span class="eyebrow">ПРОДОЛЖИТЬ</span><h2>Мои раскраски</h2></div><button class="primary" data-goto="books">+ Добавить</button></div>
+  <div id="homeBooks" class="book-grid empty">Пока здесь пусто. Добавь первую раскраску.</div>
+  <div class="notice"><b>Подбор цвета</b><p>Добавь эталонный HEX-цвет для символа из легенды Hachette. Приложение сравнит его с оттенками твоих маркеров и покажет процент сходства.</p></div>
+</section>
+
+<section id="markers" class="panel">
+  <div class="section-head"><div><span class="eyebrow">МОЯ ПАЛИТРА</span><h2>Маркеры</h2><p class="muted">Добавляй новые маркеры по мере покупок.</p></div><button id="addMarker" class="primary">+ Маркер</button></div>
+  <div class="filters"><input id="markerSearch" placeholder="Поиск по бренду или номеру"><select id="brandFilter"><option value="">Все бренды</option></select></div>
+  <div id="markerList" class="marker-grid"></div>
+  <div class="small-note">Цвета стартовой палитры Languo — ориентировочные экранные образцы. Для Guangna 168 можно добавить маркеры вручную или импортировать их из резервной копии.</div>
+</section>
+
+<section id="books" class="panel">
+  <div class="section-head"><div><span class="eyebrow">МОЯ БИБЛИОТЕКА</span><h2>Раскраски и страницы</h2></div><button id="addBook" class="primary">+ Раскраска</button></div>
+  <div id="bookList" class="book-list empty">Добавь том или раскраску, чтобы вести страницы и прогресс.</div>
+</section>
+
+<section id="cloud" class="panel">
+  <span class="eyebrow">СИНХРОНИЗАЦИЯ</span><h2>Облачное хранение</h2>
+  <div class="cloud-card"><div class="cloud-icon">☁️</div><h3>Яндекс Диск</h3><p>Подключение Яндекс Диска запланировано. В этой сборке облачная авторизация и автоматическая загрузка ещё не подключены.</p><p>Пока сохраняй резервную копию и храни её в своём облаке. Фото и данные остаются на устройстве до экспорта.</p><button id="cloudInfo" class="soft">Как будет работать подключение</button></div>
+  <div class="notice"><b>Важно о данных</b><p>Не удаляй данные Safari и не очищай хранилище сайта без резервной копии. Перед переносом на новый iPhone используй экспорт JSON.</p></div>
+</section>
+</main>
+
+<dialog id="markerDialog"><form method="dialog" id="markerForm">
+  <div class="dialog-head"><h2 id="markerDialogTitle">Новый маркер</h2><button class="x" value="cancel">×</button></div>
+  <input type="hidden" id="markerId">
+  <label>Бренд / набор<input id="mBrand" required placeholder="Guangna, Languo…"></label>
+  <label>Серия (необязательно)<input id="mSeries" placeholder="GN.8101-168, Dark Skin…"></label>
+  <label>Номер маркера<input id="mCode" required placeholder="603, DS-181, GB-405…"></label>
+  <label>Название (необязательно)<input id="mName" placeholder="Название оттенка"></label>
+  <label>Цвет образца<input id="mColor" type="color" value="#d65b73"></label>
+  <div class="swatch-preview" id="mPreview"></div>
+  <label>Заметка<textarea id="mNote" rows="2" placeholder="Например, куплен в ноябре"></textarea></label>
+  <div class="dialog-actions"><button type="button" id="deleteMarker" class="danger hidden">Удалить</button><button class="primary" id="saveMarker" value="default">Сохранить</button></div>
+</form></dialog>
+
+<dialog id="bookDialog"><form method="dialog" id="bookForm">
+  <div class="dialog-head"><h2>Новая раскраска</h2><button class="x" value="cancel">×</button></div>
+  <label>Название<input id="bTitle" required placeholder="Héros vs Méchants"></label>
+  <label>Издательство / серия<input id="bPublisher" placeholder="Hachette"></label>
+  <label>Количество страниц<input id="bCount" type="number" min="1" value="1"></label>
+  <label>Заметка<textarea id="bNote" rows="2"></textarea></label>
+  <div class="dialog-actions"><button class="primary" value="default">Создать</button></div>
+</form></dialog>
+
+<dialog id="pageDialog"><form method="dialog" id="pageForm">
+  <div class="dialog-head"><h2 id="pageTitle">Страница</h2><button class="x" value="cancel">×</button></div>
+  <input type="hidden" id="pageBookId"><input type="hidden" id="pageNo">
+  <label>Статус<select id="pageStatus"><option value="todo">Не начата</option><option value="progress">В процессе</option><option value="done">Готова</option></select></label>
+  <div class="timer-box"><strong id="timerValue">00:00:00</strong><div><button type="button" id="timerToggle" class="soft">▶ Старт</button><button type="button" id="timerReset" class="soft">Сбросить</button></div></div>
+  <h3>Цветовые символы Hachette</h3>
+  <p class="muted tiny">Введи символ точно как в легенде и HEX эталонного цвета. Подбор сравнит его с твоими маркерами.</p>
+  <div class="symbol-add"><input id="symbolCode" placeholder="Символ, например 1, A, ★"><input id="symbolColor" type="color" value="#d65b73"><button type="button" id="addSymbol" class="soft">+</button></div>
+  <div id="symbolList" class="symbol-list"></div>
+  <label>Фото готовой работы<input id="pagePhoto" type="file" accept="image/*" multiple></label>
+  <div id="photoPreview" class="photo-grid"></div>
+  <div class="dialog-actions"><button class="primary" value="default">Сохранить страницу</button></div>
+</form></dialog>
+<input type="file" id="importFile" accept="application/json" hidden>
+<script src="app.js"></script>
+</body></html>

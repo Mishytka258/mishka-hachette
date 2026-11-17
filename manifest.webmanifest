@@ -1,0 +1,16 @@
+{
+  "name": "Mishka hachette",
+  "short_name": "Mishka",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f7f1eb",
+  "theme_color": "#f7f1eb",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
